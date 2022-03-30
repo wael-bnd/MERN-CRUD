@@ -1,12 +1,13 @@
 const Product = require("../models/product");
 
-exports.getProducts = (req, res) => {
-  const products = Product.find()
-    .select("_id title description price created")
-    .then((products) => {
+exports.getProducts = async (req, res) => {
+  try {
+    await Product.find({}).then((products) => {
       res.json({ products });
-    })
-    .catch((err) => console.log(err));
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.createProduct = async (req, res) => {
@@ -46,4 +47,14 @@ exports.updateProduct = async (req, res) => {
   } catch (err) {
     res.send(err);
   }
+};
+
+exports.filterProducts = (req, res) => {
+  const products = Product.find()
+    .where("price" > 3000)
+    .select("_id title description price created")
+    .then((products) => {
+      res.json({ products });
+    })
+    .catch((err) => console.log(err));
 };
