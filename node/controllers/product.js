@@ -62,3 +62,41 @@ exports.searchProducts = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.filterProducts = async (req, res) => {
+  try {
+    await Product.find({
+      price: { $gte: req.params.min, $lte: req.params.max },
+    })
+      .select("_id title description price ")
+      .then((products) => {
+        res.json(products);
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+exports.maxPrice = async (req, res) => {
+  try {
+    await Product.find()
+      .sort({ price: -1 })
+      .limit(1)
+      .then((product) => {
+        res.json(product);
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+exports.minPrice = async (req, res) => {
+  try {
+    await Product.find()
+      .sort({ price: 1 })
+      .limit(1)
+      .then((product) => {
+        res.json(product);
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
